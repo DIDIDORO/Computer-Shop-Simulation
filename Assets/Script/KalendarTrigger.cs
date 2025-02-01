@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class KalendarTrigger : MonoBehaviour
+public class KalendarTriggerForCalendar : MonoBehaviour
 {
     [Header("UI Settings")]
     public GameObject uiImage;

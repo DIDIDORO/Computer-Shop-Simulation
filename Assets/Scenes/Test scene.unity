@@ -1378,7 +1378,7 @@ Transform:
   m_GameObject: {fileID: 1658718915}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.955, z: 0}
+  m_LocalPosition: {x: 5.97, y: 0.955, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1397,7 +1397,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hintUI: {fileID: 992375040}
-  hintText: Lorem ipsum doloren et gratia
+  hintText: "\u041D\u0430\u0442\u0438\u0441\u043D\u0456\u0442\u044C E \u0449\u043E\u0431
+    \u0437\u0430\u0439\u043C\u043E\u0434\u0456\u044F\u0442\u044C \u0437 \u043F\u0440\u0435\u0434\u043C\u043D\u0442\u043E\u043C"
   hintTextComponent: {fileID: 992375042}
 --- !u!1001 &1713807984
 PrefabInstance:

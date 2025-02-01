@@ -8,7 +8,7 @@ public class DayCycleMenager : MonoBehaviour
 {
     [Range(0f, 1f)]
     public float TimeOfDay;
-    public float DayDuration = 30f;
+    public float DayDuration = 60f;
 
     public Light sun;
 

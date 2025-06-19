@@ -1,18 +1,18 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 public class PlayerInteractor : MonoBehaviour
 {
-    [Header("Посилання")]
-    public Transform playerTransform;               // Сам гравець
-    public Camera playerCamera;                     // Камера гравця
-    public PickupableBox targetBox;                 // Коробка, з якою взаємодіяти
+    public Transform playerTransform;
+    public Camera playerCamera;
 
-    [Header("UI Об'єкти")]
-    public GameObject uiHover;                      // UI: "Press E to interact"
-    public GameObject uiHold;                       // UI: "Click X to throw", "Click C to unpack"
-    public GameObject uiUnpacked;                   // UI: "Click ENTER to put", "Click C to pack"
+    public List<PickupableBox> allBoxes = new List<PickupableBox>(); // список усіх коробок
+    public PickupableBox targetBox;
 
-    [Header("Параметри")]
+    public GameObject uiHover;
+    public GameObject uiHold;
+    public GameObject uiUnpacked;
+
     public float interactDistance = 3f;
 
     private enum State { Idle, Holding, Unpacked }
@@ -20,27 +20,32 @@ public class PlayerInteractor : MonoBehaviour
 
     void Update()
     {
-        float distance = Vector3.Distance(playerTransform.position, targetBox.transform.position);
-        Vector3 dirToBox = (targetBox.transform.position - playerCamera.transform.position).normalized;
-        float dot = Vector3.Dot(playerCamera.transform.forward, dirToBox);
+        if (allBoxes.Count == 0) return;
 
-        if (currentState == State.Idle)
+        // Перевірка на найближчу коробку
+        foreach (var box in allBoxes)
         {
-            bool inRange = distance <= interactDistance && dot > 0.9f;
+            float distance = Vector3.Distance(playerTransform.position, box.transform.position);
+            Vector3 dirToBox = (box.transform.position - playerCamera.transform.position).normalized;
+            float dot = Vector3.Dot(playerCamera.transform.forward, dirToBox);
 
-            // Включити/вимкнути обводку і UI при наведенні
-            targetBox.SetOutline(inRange);
-            uiHover.SetActive(inRange);
-
-            if (inRange && Input.GetKeyDown(KeyCode.E))
+            if (distance <= interactDistance && dot > 0.9f)
             {
-                currentState = State.Holding;
-                uiHover.SetActive(false);
-                uiHold.SetActive(true);
-                targetBox.PickUp(playerTransform);
+                targetBox = box;
+                uiHover.SetActive(true);
+
+                if (Input.GetKeyDown(KeyCode.E))
+                {
+                    currentState = State.Holding;
+                    uiHover.SetActive(false);
+                    uiHold.SetActive(true);
+                    targetBox.PickUp(playerTransform);
+                    break;
+                }
             }
         }
-        else if (currentState == State.Holding)
+
+        if (currentState == State.Holding)
         {
             if (Input.GetKeyDown(KeyCode.X))
             {
@@ -53,20 +58,23 @@ public class PlayerInteractor : MonoBehaviour
                 currentState = State.Unpacked;
                 uiHold.SetActive(false);
                 uiUnpacked.SetActive(true);
+                targetBox.OpenBox();
             }
         }
         else if (currentState == State.Unpacked)
         {
-            if (Input.GetKeyDown(KeyCode.Return)) // ENTER
+            if (Input.GetKeyDown(KeyCode.Return))
             {
-                // Тут буде логіка "поставити"
-                Debug.Log("Поки нічого не робить — ENTER");
+                targetBox.DropItem();
+                uiUnpacked.SetActive(false);
+                currentState = State.Idle;
             }
             else if (Input.GetKeyDown(KeyCode.C))
             {
                 currentState = State.Holding;
                 uiUnpacked.SetActive(false);
                 uiHold.SetActive(true);
+                targetBox.CloseBox();
             }
         }
     }

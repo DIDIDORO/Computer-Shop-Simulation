@@ -8,23 +8,28 @@ public class EscToggleUI : MonoBehaviour
 
     private bool isVisible = false;
 
-    void Start()
+void Start()
+{
+    if (uiPanel == null)
     {
-        if (uiPanel == null)
-        {
-            Debug.LogError("UI Panel не призначено в інспекторі!");
-            return;
-        }
-
-        uiPanel.SetActive(false);
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
-
-        if (alwaysVisibleUI != null)
-        {
-            alwaysVisibleUI.SetActive(true);
-        }
+        Debug.LogError("UI Panel не призначено в інспекторі!");
+        return;
     }
+
+    // Активуємо панель UI на початку гри
+    uiPanel.SetActive(true);
+
+    // Якщо потрібно, можна залишити приховування курсора
+    Cursor.lockState = CursorLockMode.Locked;
+    Cursor.visible = false;
+
+    // Активуємо інші елементи UI, які повинні бути завжди видимими
+    if (alwaysVisibleUI != null)
+    {
+        alwaysVisibleUI.SetActive(true);
+    }
+}
+
 
     void Update()
     {

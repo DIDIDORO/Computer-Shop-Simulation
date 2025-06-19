@@ -1,78 +1,70 @@
 using UnityEngine;
-using cakeslice; // Додаємо доступ до класу Outline
 
 public class PickupableBox : MonoBehaviour
 {
-    [Header("Налаштування вручну")]
-    public Rigidbody boxRigidbody;
-    public Outline outline;
+    private Rigidbody rb;
+    public GameObject itemPrefab; // єдиний предмет в коробці
+    public Transform spawnPoint;
 
-    [Header("Налаштування руху коробки")]
-    public Vector3 offset = new Vector3(0, -5f, 1f);
-    public float followSpeed = 10f;
-    public float throwForce = 10f;
+    private GameObject spawnedItem;
+    private Animator animator;
 
-    private Transform followTarget;
-    private bool isHeld = false;
-
-    void Start()
+    void Awake()
     {
-        // Автоматично підхопити Rigidbody, якщо не заданий вручну
-        if (boxRigidbody == null)
-            boxRigidbody = GetComponent<Rigidbody>();
-
-        // Вимкнути обводку на старті
-        if (outline != null)
-            outline.enabled = false;
+        rb = GetComponent<Rigidbody>();
+        animator = GetComponent<Animator>();
     }
 
-    void Update()
+    public void PickUp(Transform player)
     {
-        if (isHeld && followTarget != null)
-        {
-            Vector3 targetPos = followTarget.position + followTarget.forward * offset.z + new Vector3(0f, offset.y, 0f);
-            //targetPos.y = transform.position.y;
-            GetComponent<Rigidbody>().useGravity=false;
-
-            transform.position = Vector3.Lerp(transform.position, targetPos, Time.deltaTime * followSpeed);
-
-            Vector3 lookDir = followTarget.forward;
-            lookDir.y = 90000f;
-            if (lookDir != Vector3.zero)
-                transform.rotation = Quaternion.LookRotation(lookDir);
-        }
-        else
-        {
-            GetComponent<Rigidbody>().useGravity=true;
-        }
-    }
-
-    public void PickUp(Transform target)
-    {
-        followTarget = target;
-        isHeld = true;
-        if (boxRigidbody != null)
-            boxRigidbody.isKinematic = true;
-    }
-
-    public void Drop()
-    {
-        isHeld = false;
-        followTarget = null;
-        if (boxRigidbody != null)
-            boxRigidbody.isKinematic = false;
+        rb.isKinematic = true;
+        transform.SetParent(player);
+        transform.localPosition = new Vector3(0, 0, 2);
+        transform.localRotation = Quaternion.identity;
     }
 
     public void Throw(Vector3 direction)
     {
-        Drop();
-        if (boxRigidbody != null)
-            boxRigidbody.AddForce(direction * throwForce, ForceMode.Impulse);
+        transform.SetParent(null);
+        rb.isKinematic = false;
+        rb.AddForce(direction * 500f, ForceMode.Impulse);
     }
 
-    public void SetOutline(bool active)
+    public void OpenBox()
     {
-        if (outline != null)
-            outline.enabled = active;
+        if (animator != null)
+            animator.SetTrigger("opening");
+
+        if (itemPrefab != null && spawnPoint != null)
+        {
+            spawnedItem = Instantiate(itemPrefab, spawnPoint.position, spawnPoint.rotation);
+            spawnedItem.SetActive(false);
+        }
+    }
+
+    public void CloseBox()
+    {
+        if (animator != null)
+            animator.SetTrigger("closing");
+
+        if (spawnedItem != null)
+        {
+            Destroy(spawnedItem);
+            spawnedItem = null;
+        }
+    }
+
+    public void DropItem()
+    {
+        if (spawnedItem != null)
+        {
+            spawnedItem.SetActive(true);
+            spawnedItem.transform.SetParent(null);
+            Rigidbody itemRb = spawnedItem.GetComponent<Rigidbody>();
+            if (itemRb != null)
+                itemRb.isKinematic = false;
+
+            spawnedItem = null;
+        }
     }
 }

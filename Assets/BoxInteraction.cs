@@ -12,24 +12,17 @@ public class BoxInteraction : MonoBehaviour
     public GameObject boxObject;
     public Animator boxAnimator;
 
-    [Header("Позиція та обертання коробки в руках")]
-    public Vector3 holdLocalPosition = new Vector3(0f, 1.5f, 1f);
-    public Vector3 holdLocalRotation = new Vector3(-90f, 0f, 0f);
+    [Header("Позиція коробки в руках")]
+    public Vector3 offsetFromPlayer = new Vector3(0f, 1.5f, 1f);
 
-    private Transform holdPoint;
     private bool isNearBox = false;
     private bool hasPickedBox = false;
+    private bool isBoxOpened = false;
 
     private Rigidbody boxRb;
 
     void Start()
     {
-        // Створюємо HoldPoint прив'язаний до гравця
-        holdPoint = new GameObject("HoldPoint").transform;
-        holdPoint.SetParent(player);
-        holdPoint.localPosition = holdLocalPosition;
-        holdPoint.localRotation = Quaternion.Euler(holdLocalRotation);
-
         boxRb = boxObject.GetComponent<Rigidbody>();
         if (boxRb != null)
             boxRb.isKinematic = true;
@@ -37,13 +30,10 @@ public class BoxInteraction : MonoBehaviour
 
     void Update()
     {
-        // Підтримуємо позицію HoldPoint відносно гравця
-        holdPoint.localPosition = holdLocalPosition;
-        holdPoint.localRotation = Quaternion.Euler(holdLocalRotation);
-
         float distance = Vector3.Distance(player.position, transform.position);
         isNearBox = distance <= interactionDistance;
 
+        // Показати UI1 коли біля коробки
         if (isNearBox && !hasPickedBox)
         {
             UI1.SetActive(true);
@@ -54,11 +44,6 @@ public class BoxInteraction : MonoBehaviour
                 UI2.SetActive(true);
                 hasPickedBox = true;
 
-                // Поміщаємо коробку в руки
-                boxObject.transform.SetParent(holdPoint);
-                boxObject.transform.localPosition = Vector3.zero;
-                boxObject.transform.localRotation = Quaternion.identity;
-
                 if (boxRb != null)
                     boxRb.isKinematic = true;
             }
@@ -68,15 +53,14 @@ public class BoxInteraction : MonoBehaviour
             UI1.SetActive(false);
         }
 
+        // Коли коробка в руках
         if (hasPickedBox)
         {
-            // Відкидання коробки на X
+            // Кинути коробку (X)
             if (Input.GetKeyDown(KeyCode.X))
             {
                 UI2.SetActive(false);
                 hasPickedBox = false;
-
-                boxObject.transform.SetParent(null);
 
                 if (boxRb != null)
                 {
@@ -85,6 +69,51 @@ public class BoxInteraction : MonoBehaviour
                     boxRb.AddForce(throwDirection.normalized * 5f, ForceMode.Impulse);
                 }
             }
+
+            // Відкрити коробку (C)
+            if (Input.GetKeyDown(KeyCode.C) && UI2.activeSelf && !isBoxOpened)
+            {
+                boxAnimator.SetTrigger("opening");
+                UI2.SetActive(false);
+                UI3.SetActive(true);
+                isBoxOpened = true;
+            }
+
+            // Закрити коробку (C)
+            else if (Input.GetKeyDown(KeyCode.C) && UI3.activeSelf && isBoxOpened)
+            {
+                boxAnimator.SetTrigger("Closing");
+                UI3.SetActive(false);
+                UI2.SetActive(true);
+                isBoxOpened = false;
+            }
+
+            // Поставити коробку на землю (Enter)
+            if (Input.GetKeyDown(KeyCode.Return) && UI3.activeSelf)
+            {
+                UI3.SetActive(false);
+                hasPickedBox = false;
+                isBoxOpened = false;
+
+                boxObject.transform.SetParent(null);
+                if (boxRb != null)
+                    boxRb.isKinematic = false;
+            }
+        }
+    }
+
+    void LateUpdate()
+    {
+        // Позиціонування коробки в руках
+        if (hasPickedBox)
+        {
+            Vector3 targetPosition = player.position + player.forward * offsetFromPlayer.z + player.right * offsetFromPlayer.x;
+            targetPosition.y = player.position.y + offsetFromPlayer.y;
+
+            boxObject.transform.position = targetPosition;
+
+            // Коробка орієнтована тільки по Y, X = -90
+            boxObject.transform.rotation = Quaternion.Euler(-90f, player.eulerAngles.y, 0f);
         }
     }
 }

@@ -18464,7 +18464,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: -90.049, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -576.3184, y: -274.841}
+  m_AnchoredPosition: {x: -576.3184, y: -278.68793}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &430246221
@@ -35919,7 +35919,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: b4f93085126e0cc4494c809e4ec27882, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.246
+      value: 0.667
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: b4f93085126e0cc4494c809e4ec27882, type: 3}
       propertyPath: m_LocalPosition.z
@@ -35953,10 +35953,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -1461304994638716399, guid: b4f93085126e0cc4494c809e4ec27882, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 032dad8ae2ae60a4b9cb4d7267132a1d, type: 2}
     - target: {fileID: 919132149155446097, guid: b4f93085126e0cc4494c809e4ec27882, type: 3}
       propertyPath: m_Name
       value: Korobka
       objectReference: {fileID: 0}
+    - target: {fileID: 8785528080728405848, guid: b4f93085126e0cc4494c809e4ec27882, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: c852af001dae0064e9acaa832f1dadb7, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -39096,6 +39104,8 @@ MonoBehaviour:
   offset: {x: 0, y: -0.1, z: 0.8}
   followSpeed: 1000
   throwForce: 10
+  followTarget: {fileID: 0}
+  isHeld: 0
 --- !u!54 &942830527
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -41818,7 +41828,7 @@ Transform:
   m_GameObject: {fileID: 998319250}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -31.1, y: 0.85, z: 8.716732}
+  m_LocalPosition: {x: -24, y: 0.85, z: 8.716732}
   m_LocalScale: {x: 1, y: 1, z: 1.8602}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -42587,7 +42597,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: -90.237, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -576.306, y: -275.0036}
+  m_AnchoredPosition: {x: -576.306, y: -287.25}
   m_SizeDelta: {x: 94.6407, y: 98.7136}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1018728304
@@ -48539,6 +48549,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2300000, guid: 83f25ee3b9f68a04faad68fee3d27b51, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: d15e38c8ed480004fbb959137225b569, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -50430,6 +50444,7 @@ MonoBehaviour:
   uiHold: {fileID: 2102819392}
   uiUnpacked: {fileID: 476241938}
   interactDistance: 3
+  currentState: 0
 --- !u!1001 &1192068039
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -59574,7 +59589,7 @@ PrefabInstance:
       objectReference: {fileID: 1323061404}
     - target: {fileID: 6221199456575197774, guid: b072c106e32afe048ae2c23bef918c8d, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -32.66
+      value: -21.06
       objectReference: {fileID: 0}
     - target: {fileID: 6221199456575197774, guid: b072c106e32afe048ae2c23bef918c8d, type: 3}
       propertyPath: m_LocalPosition.y
@@ -82618,7 +82633,7 @@ Transform:
   m_GameObject: {fileID: 1917050572}
   serializedVersion: 2
   m_LocalRotation: {x: 0.000000015384527, y: -0.71028626, z: 0.000000015523788, w: 0.703913}
-  m_LocalPosition: {x: 24.79, y: 0.496, z: 44.68}
+  m_LocalPosition: {x: 26.41, y: 0.46, z: 43.793}
   m_LocalScale: {x: 0.49552792, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

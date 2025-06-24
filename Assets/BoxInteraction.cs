@@ -10,6 +10,7 @@ public class BoxInteraction : MonoBehaviour
     public GameObject UI3;
 
     public GameObject boxObject;
+    public GameObject itemObject;
     public Animator boxAnimator;
 
     [Header("Позиція коробки в руках")]
@@ -26,6 +27,9 @@ public class BoxInteraction : MonoBehaviour
         boxRb = boxObject.GetComponent<Rigidbody>();
         if (boxRb != null)
             boxRb.isKinematic = true;
+
+        if (itemObject != null)
+            itemObject.SetActive(false);
     }
 
     void Update()
@@ -111,9 +115,19 @@ public class BoxInteraction : MonoBehaviour
             targetPosition.y = player.position.y + offsetFromPlayer.y;
 
             boxObject.transform.position = targetPosition;
-
-            // Коробка орієнтована тільки по Y, X = -90
             boxObject.transform.rotation = Quaternion.Euler(-90f, player.eulerAngles.y, 0f);
         }
+    }
+
+    // Метод для події в анімації opening
+    public void ReplaceBoxWithItem()
+    {
+        Debug.Log("Замінюємо коробку на предмет");
+
+        if (boxObject != null)
+            boxObject.SetActive(false);
+
+        if (itemObject != null)
+            itemObject.SetActive(true);
     }
 }
